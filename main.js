@@ -84,11 +84,11 @@ function clearInput() {
 
 // for delete just 1 todo
 function deleteTodos(index) {
+  const checkbox = document.querySelector(`#checkTask-${index}`);
   if (editIndex !== null) {
     alert("برجاء إنهاء التعديل الحالي أولاً (Update) قبل حذف أي مهمة!");
     return;
   }
-  const checkbox = document.querySelector(`#checkTask-${index}`);
   if (checkbox && checkbox.checked) {
     todos.splice(index, 1);
     displayTodos();
