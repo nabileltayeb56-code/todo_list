@@ -5,7 +5,7 @@ const todoList = document.querySelector("#taskList");
 const taskCountElement = document.querySelector("#taskCount");
 
 // Vars
-let todos = [];
+let todos = JSON.parse(localStorage.getItem("myTodos")) || [];
 let editIndex = null;
 const originalBtnText = addBtn.innerText.trim();
 
@@ -20,13 +20,6 @@ function displayTodos() {
                 class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-2 task-item"
               >
                 <div class="d-flex align-items-center me-3">
-                  <input
-                    class="form-check-input me-3 border-secondary-subtle"
-                    type="radio"
-                    name="todoGroup" 
-                    id="checkTask-${index}" 
-                    ${isDisabled}
-                  />
                   <span class="task-text"
                     >${todo}</span
                   >
@@ -56,6 +49,8 @@ function displayTodos() {
   if (taskCountElement) {
     taskCountElement.innerText = `عدد المهام : ${todos.length}`;
   }
+  // دا عشان لما نعمل ريفرش المهام متتمسحش ..
+  localStorage.setItem("myTodos", JSON.stringify(todos));
 }
 
 // add todos
@@ -84,17 +79,13 @@ function clearInput() {
 
 // for delete just 1 todo
 function deleteTodos(index) {
-  const checkbox = document.querySelector(`#checkTask-${index}`);
   if (editIndex !== null) {
     alert("برجاء إنهاء التعديل الحالي أولاً (Update) قبل حذف أي مهمة!");
     return;
   }
-  if (checkbox && checkbox.checked) {
-    todos.splice(index, 1);
-    displayTodos();
-  } else {
-    alert("برجاء تحديد المهمة (Check) أولاً قبل الحذف!");
-  }
+
+  todos.splice(index, 1);
+  displayTodos();
 }
 
 // for delete all todos
@@ -113,11 +104,6 @@ function deleteAllTodos() {
 
 // For edit todo
 function editTodos(index) {
-  const checkbox = document.querySelector(`#checkTask-${index}`);
-  if (!checkbox || !checkbox.checked) {
-    alert("برجاء تحديد المهمة (Check) أولاً قبل البدء في التعديل!");
-    return;
-  }
   editIndex = index;
   todoInput.value = todos[index];
   todoInput.focus();
@@ -132,3 +118,5 @@ addBtn.addEventListener("click", (e) => {
   clearInput();
   displayTodos();
 });
+
+displayTodos();
